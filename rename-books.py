@@ -1,16 +1,20 @@
-from pyPdf import PdfFileWriter, PdfFileReader
+from PyPDF2 import PdfFileWriter, PdfFileReader
 import os
 
-directory = './books/'
+from pathlib import Path
 
-for fileName in os.listdir(directory):
-    try:
-        if fileName.lower()[-3:] != "pdf":
-            print('not a pdf');
-            continue
-        input1 = PdfFileReader(file(directory + fileName, "rb"))
+#dir = '/home/bradleybossard/src/cheatsheets/reading-lists'
+# directory = './books/'
+dir = '/Users/bradleybossard/Downloads/Takeout/Google Play Books'
+pattern = '*.pdf'
 
-    # print the title of document1.pdf
-        print('##pass ' + fileName + ' ' + input1.getDocumentInfo().title)
-    except Exception as e:
-        print('##fail ' + fileName + ' ' + str(e))
+for filename in Path(dir).glob(pattern):
+    if filename.is_dir():
+        continue
+    with open(filename, 'rb') as file:
+        input1 = PdfFileReader(file)
+        try:
+            # print the title of document1.pdf
+            print('##pass ' + str(filename) + '       ' + str(input1.getDocumentInfo().title))
+        except Exception as e:
+            print('##fail ' + str(filename) + ' ' + str(e))
